@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "cleanairheroes",
+  "version": "1.0.0",
+  "name": "Clean Air Heroes",
+  "description": "An educational environmental engineering adventure game where players fight air pollution across 5 real-world regions (Varna, Zonguldak, Odesa, Trabzon, Southeast Romania) using science and engineering solutions.",
+  "authors": [
+    "Clean Air Heroes Development Team"
+  ],
+  "contact": {
+    "homepage": "https://cleanairheroes.com",
+    "sources": "https://github.com/cleanairheroes/minecraft-mod"
+  },
+  "license": "MIT",
+  "icon": "assets/cleanairheroes/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.cleanairheroes.CleanAirHeroes"
+    ],
+    "client": [
+      "com.cleanairheroes.client.CleanAirHeroesClient"
+    ]
+  },
+  "mixins": [
+    "cleanairheroes.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "cardinal-components": [
+      "cleanairheroes:player_progress",
+      "cleanairheroes:pollution_data",
+      "cleanairheroes:mission_data"
+    ],
+    "modmenu": {
+      "badges": ["library"],
+      "parent": {
+        "id": "cleanairheroes",
+        "name": "Clean Air Heroes",
+        "badges": ["library"],
+        "description": "Fight air pollution with science!"
+      }
+    }
+  }
+}

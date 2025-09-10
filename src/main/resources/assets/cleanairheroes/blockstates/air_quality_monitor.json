@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "cleanairheroes:block/air_quality_monitor"
+    }
+  }
+}
