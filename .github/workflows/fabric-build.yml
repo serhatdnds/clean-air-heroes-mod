@@ -22,7 +22,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -43,7 +43,7 @@ jobs:
         GRADLE_OPTS: "-Xmx2g -XX:MaxMetaspaceSize=512m"
         
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success()
       with:
         name: CleanAirHeroes-Mod-JAR
@@ -52,7 +52,7 @@ jobs:
         
     - name: Create Release
       if: github.ref == 'refs/heads/main' && success()
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ github.run_number }}
         name: Clean Air Heroes v${{ github.run_number }}
@@ -76,6 +76,9 @@ jobs:
           - İngilizce-Türkçe tam destek
           
           ✨ Build #${{ github.run_number }} - Otomatik oluşturuldu
+          
+          🤖 Generated with [Claude Code](https://claude.ai/code)
+          Co-Authored-By: Claude <noreply@anthropic.com>
         files: |
           build/libs/*.jar
         draft: false
