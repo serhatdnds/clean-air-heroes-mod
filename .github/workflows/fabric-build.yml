@@ -1,0 +1,84 @@
+name: Build Clean Air Heroes Mod
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+      
+    - name: Clean build directory
+      run: ./gradlew clean
+      
+    - name: Build with Gradle
+      run: ./gradlew build --no-daemon --stacktrace
+      env:
+        GRADLE_OPTS: "-Xmx2g -XX:MaxMetaspaceSize=512m"
+        
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: CleanAirHeroes-Mod-JAR
+        path: build/libs/*.jar
+        retention-days: 30
+        
+    - name: Create Release
+      if: github.ref == 'refs/heads/main' && success()
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: Clean Air Heroes v${{ github.run_number }}
+        body: |
+          🌍 Clean Air Heroes Minecraft Mod - Otomatik Build
+          
+          📦 **Bu Release İçindekiler:**
+          - cleanairheroes-1.0.0.jar (Ana mod dosyası)
+          - cleanairheroes-1.0.0-sources.jar (Kaynak kod)
+          
+          🎮 **Kurulum:**
+          1. Minecraft 1.20.1 + Fabric Loader 0.14.21 gerekli
+          2. Fabric API 0.83.0+1.20.1 indirin
+          3. Her iki JAR dosyasını mods klasörüne koyun
+          4. Yeni dünya oluşturun ve `/cleanair start tutorial` yazın
+          
+          📚 **Eğitimsel İçerik:**
+          - 5 gerçek dünya bölgesi (Varna, Zonguldak, Odesa, Trabzon, Romanya)
+          - 21 çevre mühendisliği görevi
+          - 16 interaktif mini oyun
+          - İngilizce-Türkçe tam destek
+          
+          ✨ Build #${{ github.run_number }} - Otomatik oluşturuldu
+        files: |
+          build/libs/*.jar
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
